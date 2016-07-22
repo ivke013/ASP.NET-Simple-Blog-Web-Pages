@@ -1,0 +1,34 @@
+﻿@{
+    Page.Title = "Blog";
+
+    var db = @Database.Open("BlogConnection");
+    var Posts = db.Query("SELECT * FROM Posts ORDER BY ID ASC");
+}
+
+@{
+    foreach(var Post in Posts)
+    {
+        <article>
+            <h1 class="page-header"> @Post.Title </h1>
+            <p>@Post.Text</p>
+        </article>     
+                      
+        <hr>        
+    }
+}
+
+
+<!-- Sidebar -->
+
+@section Sidebar {
+    <h3>Recent posts</h3>
+
+    <ul class="list-group">
+        @{
+            foreach(var Post in Posts)
+            {
+               <li class="list-group-item"><a href="#">@Post.Title</a></li>
+            }
+        }
+    </ul>
+}
