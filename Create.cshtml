@@ -1,0 +1,52 @@
+﻿@{
+    Page.Title = "Create Post";
+}
+
+<h1>@Page.Title</h1>
+
+@{
+    // Validation
+    Validation.RequireField("title", "Post title is required field");
+    Validation.RequireField("author", "Author title is required");
+    Validation.RequireField("text", "Post text is required field");
+     
+     var db = Database.Open("BlogConnection");
+     string Title = Request["title"];
+     string Author = Request["author"];
+     string Text = Request["text"];
+     DateTime Created = DateTime.Now;
+     DateTime Modified = DateTime.Now;
+
+    if(IsPost && Validation.IsValid())
+    {
+        if(ModelState.IsValid)
+        {
+            string query = "INSERT INTO Posts (Title, Text, Author, DateCreated, DateModified)";
+            query += "VALUES(@0, @1, @2, @3, @4)";
+            
+            db.Execute(query, Title, Text, Author, Created, Modified);
+
+            Response.Redirect("~/Index.cshtml");
+        }
+    }
+}
+
+<div class="row">
+    <form action="" method="post">
+         <fieldset class="form-group">
+            <label>Post title: </label>
+             <input type="text" name="title" class="form-control">
+         </fieldset>
+        <fieldset class="form-group">
+            <label>Post author: </label>
+             <input type="text" name="author" size="20" min="3" class="form-control">
+         </fieldset>
+        <fieldset class="form-group">
+            <label>Post text: </label>
+             <textarea name="text" class="form-control"></textarea>
+         </fieldset>
+        <p>
+            <button type="submit" class="btn btn-primary">Create post</button>
+        </p>
+    </form>
+</div>
